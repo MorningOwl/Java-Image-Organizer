@@ -22,6 +22,7 @@ public class ImageReading {
 	final static int MAXPIXELS = 255;
 	final static int GREYPIXELS = 128;
 	static List<ImageColorKeys> colorPalleteList;
+	
 
 	public static void main(String[] args0) {
 		System.out.println("The number of processors: " + Runtime.getRuntime().availableProcessors());
@@ -30,18 +31,44 @@ public class ImageReading {
 	}
 
 	public ImageReading() {
-		ImageItem imageItem;
+		ImageItem imageItem1, imageItem2, imageItem3;
 		this.setImageColorPalleteList();
 		
+		/*
 		long startTime, endTime, duration;
-
 		startTime = System.nanoTime();
-		imageItem = readTheImageByThreading(new File("C:\\Users\\edward.calderon\\Pictures\\DSC_0209.jpg"));
+		imageItem1 = readTheImageByThreading(new File("C:/Users/Edward/Pictures/Wordpress/DSC_0080.jpg"));
 		endTime = System.nanoTime();
 		duration = (endTime - startTime) / 1000000; // divide by 1000000 to
-													// get milliseconds.
+		                     						// get milliseconds.
 		System.out.println("Thread work = " + duration);
-		printPrettyInfo(imageItem);
+		printPrettyInfo(imageItem1);
+		*/
+		
+		ImageItem images[] = new ImageItem[3];
+		imageItem1 = readTheImageByThreading(new File("C:/Users/Edward/Pictures/Wordpress/DSC_0080.jpg"));
+		imageItem2 = readTheImageByThreading(new File("C:\\Users\\Edward\\Pictures\\Edited\\DSC_0356-1.jpg"));
+		imageItem3 = readTheImageByThreading(new File("C:\\Users\\Edward\\Pictures\\Edited\\DSC_0476-1.jpg"));
+		/*printPrettyInfo(imageItem1);
+		System.out.println();
+		printPrettyInfo(imageItem2);
+		System.out.println();
+		printPrettyInfo(imageItem3);
+		System.out.println(images.length);
+		*/
+		
+		images[0] = imageItem1;
+		images[1] = imageItem2;
+		images[2] = imageItem3;
+		sortByColor(images, ImageColors.GREY);
+		for(ImageItem ii: images){
+			if(ii != null){
+				printPrettyInfo(ii);
+			}			
+		}
+
+
+		
 
 	}
 
@@ -84,7 +111,6 @@ public class ImageReading {
 			boolean allDone = true;
 			for (Future<?> future : futures) {
 				allDone &= !future.isDone();
-				System.out.println(future.isDone());
 			}
 
 			while (!threadPool.isEmpty()) {
@@ -175,6 +201,35 @@ public class ImageReading {
 		System.out.println("Magenta percentage: " + (double) magentaCounter / (width * height));
 		System.out.println("Cyan percentage: " + (double) cyanCounter / (width * height));
 		System.out.println("Black percentage: " + (double) blackCounter / (width * height));
+	}
+	
+	/**
+	 * This is just a proof of concept, will be moving to a fitting class.
+	 * @param images
+	 * @param color
+	 */
+	public void sortByColor(ImageItem[] images, ImageColors color){
+		boolean allSorted = false;
+		boolean keepSorting = true;
+		int timesSorted = 0;
+		ImageItem tempItem;
+		while(!allSorted){			
+			for(int i = 0; i < images.length - 1; i++){
+
+				if(images[i].compareColorWith(images[i+1], color) == -1){
+					tempItem = images[i+1];
+					images[i+1] = images[i];
+					images[i] = tempItem;
+					timesSorted++;
+				}
+			}
+			
+			if(timesSorted == 0){				
+				allSorted = true;
+			} else {
+				timesSorted = 0;
+			}
+		}
 	}
 
 }

@@ -106,7 +106,8 @@ public class ImageItem {
 	}
 	
 	public int compareColorWith(ImageItem item, ImageColors color){
-		int val1, val2;
+		double val1, val2;
+		int totalPixel1 = this.getWidth() * this.getHeight(), totalPixel2 = item.getWidth() * item.getHeight();
 		
 		switch (color) {
 		case GREY:
@@ -145,7 +146,9 @@ public class ImageItem {
 			val1 = this.blackCounter;
 			val2 = item.blackCounter;
 			break;
-		}
+		}	
+		val1 /= totalPixel1;
+		val2 /= totalPixel2;
 		
 		if(val1 < val2)
 			return -1;
