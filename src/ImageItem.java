@@ -1,4 +1,5 @@
 import java.io.File;
+import java.text.NumberFormat;
 
 public class ImageItem {
 	String imageLocation, fileName;
@@ -156,5 +157,27 @@ public class ImageItem {
 			return 0;
 		else 
 			return 1;		
+	}
+	
+	public String toString(){
+		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
+		defaultFormat.setMinimumFractionDigits(0);		
+		StringBuilder build = new StringBuilder(); 
+
+
+		build.append("Image Name: " + fileName + "\n");
+		build.append("Image File Location: " + imageLocation + "\n");
+		build.append("Width: " + width + "\nHeight: " + height + "\n");
+		build.append("Grey percentage: " + defaultFormat.format((double) greyCounter / (width * height)) + "\n");
+		build.append("White percentage: " + defaultFormat.format((double) whiteCounter / (width * height)) + "\n");
+		build.append("Red percentage: " + defaultFormat.format((double) redCounter / (width * height)) + "\n");
+		build.append("Green percentage: " + defaultFormat.format((double) greenCounter / (width * height)) + "\n");
+		build.append("Blue percentage: " + defaultFormat.format((double) blueCounter / (width * height)) + "\n");
+		build.append("Yellow percentage: " + defaultFormat.format((double) yellowCounter / (width * height)) + "\n");
+		build.append("Magenta percentage: " + defaultFormat.format((double) magentaCounter / (width * height)) + "\n");
+		build.append("Cyan percentage: " + defaultFormat.format((double) cyanCounter / (width * height)) + "\n");
+		build.append("Black percentage: " + defaultFormat.format((double) blackCounter / (width * height)) + "\n");
+		
+		return build.toString();
 	}
 }

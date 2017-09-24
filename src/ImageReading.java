@@ -45,31 +45,17 @@ public class ImageReading {
 		printPrettyInfo(imageItem1);
 		*/
 		
-		ImageItem images[] = new ImageItem[3];
-		imageItem1 = readTheImageByThreading(new File("C:/Users/Edward/Pictures/Wordpress/DSC_0080.jpg"));
-		imageItem2 = readTheImageByThreading(new File("C:\\Users\\Edward\\Pictures\\Edited\\DSC_0356-1.jpg"));
-		imageItem3 = readTheImageByThreading(new File("C:\\Users\\Edward\\Pictures\\Edited\\DSC_0476-1.jpg"));
-		/*printPrettyInfo(imageItem1);
-		System.out.println();
-		printPrettyInfo(imageItem2);
-		System.out.println();
-		printPrettyInfo(imageItem3);
-		System.out.println(images.length);
-		*/
+		ImageList images = new ImageList(3);
 		
-		images[0] = imageItem1;
-		images[1] = imageItem2;
-		images[2] = imageItem3;
-		sortByColor(images, ImageColors.GREY);
-		for(ImageItem ii: images){
-			if(ii != null){
-				printPrettyInfo(ii);
-			}			
-		}
-
-
+		imageItem1 = readTheImageByThreading(new File(""));
+		imageItem2 = readTheImageByThreading(new File(""));
+		imageItem3 = readTheImageByThreading(new File(""));
 		
-
+		images.addImageItem(imageItem1);
+		images.addImageItem(imageItem2);
+		images.addImageItem(imageItem3);
+		images.sort(ImageColors.GREY);
+		
 	}
 
 	public ImageItem readTheImageByThreading(File file) {
@@ -146,90 +132,5 @@ public class ImageReading {
 		colorPalleteList.add(new ImageColorKeys(Color.RGBtoHSB(0, 0, 255, null), ImageColors.BLUE));
 		colorPalleteList.add(new ImageColorKeys(Color.RGBtoHSB(0, 0, 0, null), ImageColors.BLACK));
 	}
-
-	public void printPrettyInfo(ImageItem item) {
-		NumberFormat defaultFormat = NumberFormat.getPercentInstance();
-		defaultFormat.setMinimumFractionDigits(0);
-
-		int width = item.getWidth();
-		int height = item.getHeight();
-		int greyCounter = item.getGreyCounter();
-		int whiteCounter = item.getWhiteCounter();
-		int redCounter = item.getRedCounter();
-		int greenCounter = item.getGreenCounter();
-		int blueCounter = item.getBlueCounter();
-		int yellowCounter = item.getYellowCounter();
-		int magentaCounter = item.getMagentaCounter();
-		int cyanCounter = item.getCyanCounter();
-		int blackCounter = item.getBlackCounter();
-
-		System.out.println("Original image\nWidth: " + width + "\nHeight: " + height);
-		System.out.println("Color reference ");
-		System.out.println("Grey percentage: " + defaultFormat.format((double) greyCounter / (width * height)));
-		System.out.println("White percentage: " + defaultFormat.format((double) whiteCounter / (width * height)));
-		System.out.println("Red percentage: " + defaultFormat.format((double) redCounter / (width * height)));
-		System.out.println("Green percentage: " + defaultFormat.format((double) greenCounter / (width * height)));
-		System.out.println("Blue percentage: " + defaultFormat.format((double) blueCounter / (width * height)));
-		System.out.println("Yellow percentage: " + defaultFormat.format((double) yellowCounter / (width * height)));
-		System.out.println("Magenta percentage: " + defaultFormat.format((double) magentaCounter / (width * height)));
-		System.out.println("Cyan percentage: " + defaultFormat.format((double) cyanCounter / (width * height)));
-		System.out.println("Black percentage: " + defaultFormat.format((double) blackCounter / (width * height)));
-	}
-
-	public void printDetailedInfo(ImageItem item) {
-
-		int width = item.getWidth();
-		int height = item.getHeight();
-		int greyCounter = item.getGreyCounter();
-		int whiteCounter = item.getWhiteCounter();
-		int redCounter = item.getRedCounter();
-		int greenCounter = item.getGreenCounter();
-		int blueCounter = item.getBlueCounter();
-		int yellowCounter = item.getYellowCounter();
-		int magentaCounter = item.getMagentaCounter();
-		int cyanCounter = item.getCyanCounter();
-		int blackCounter = item.getBlackCounter();
-
-		System.out.println("Original image\nWidth: " + width + "\nHeight: " + height);
-		System.out.println("Color reference ");
-		System.out.println("Grey percentage: " + (double) greyCounter / (width * height));
-		System.out.println("White percentage: " + (double) whiteCounter / (width * height));
-		System.out.println("Red percentage: " + (double) redCounter / (width * height));
-		System.out.println("Green percentage: " + (double) greenCounter / (width * height));
-		System.out.println("Blue percentage: " + (double) blueCounter / (width * height));
-		System.out.println("Yellow percentage: " + (double) yellowCounter / (width * height));
-		System.out.println("Magenta percentage: " + (double) magentaCounter / (width * height));
-		System.out.println("Cyan percentage: " + (double) cyanCounter / (width * height));
-		System.out.println("Black percentage: " + (double) blackCounter / (width * height));
-	}
 	
-	/**
-	 * This is just a proof of concept, will be moving to a fitting class.
-	 * @param images
-	 * @param color
-	 */
-	public void sortByColor(ImageItem[] images, ImageColors color){
-		boolean allSorted = false;
-		boolean keepSorting = true;
-		int timesSorted = 0;
-		ImageItem tempItem;
-		while(!allSorted){			
-			for(int i = 0; i < images.length - 1; i++){
-
-				if(images[i].compareColorWith(images[i+1], color) == -1){
-					tempItem = images[i+1];
-					images[i+1] = images[i];
-					images[i] = tempItem;
-					timesSorted++;
-				}
-			}
-			
-			if(timesSorted == 0){				
-				allSorted = true;
-			} else {
-				timesSorted = 0;
-			}
-		}
-	}
-
 }
