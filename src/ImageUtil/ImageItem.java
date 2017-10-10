@@ -3,7 +3,7 @@ import java.io.File;
 import java.text.NumberFormat;
 
 public class ImageItem {
-	String imageLocation, fileName;
+	private String imageLocation, fileName;
 	private int greyCounter, whiteCounter, redCounter, greenCounter, blueCounter, yellowCounter, magentaCounter, cyanCounter,
 	blackCounter;
 	private int height, width;
@@ -25,6 +25,10 @@ public class ImageItem {
 		this.blackCounter = blackCounter;
 		this.height = height;
 		this.width = width;
+	}
+	
+	public String getFileName(){
+		return fileName;
 	}
 
 	public int getGreyCounter() {
@@ -105,7 +109,17 @@ public class ImageItem {
 
 	public void setBlackCounter(int blackCounter) {
 		this.blackCounter = blackCounter;
+	
 	}
+	
+	@Override
+	public boolean equals(Object item){
+		if(item instanceof ImageItem){
+			return fileName.equals(((ImageItem) item).getFileName());
+		}
+		return false;
+	}
+	
 	
 	public int compareColorWith(ImageItem item, ImageColors color){
 		double val1, val2;

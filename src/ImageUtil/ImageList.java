@@ -1,129 +1,112 @@
 package ImageUtil;
 
-public class ImageList {
-	
-	private int currentIndex;
-	private ImageItem[] images;
-	private int maxSize;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
+
+public class ImageList{
 	private ImageColors sortedByColor;
+	ImageListComparator comparator;
+	List<ImageItem> images;
 	
-	public ImageList(int maxSize){
-		this.maxSize = maxSize;
-		currentIndex = 0;
-		images = new ImageItem[maxSize];
+	public ImageList(){
+		images = new ArrayList<ImageItem>();
+		comparator = new ImageListComparator();
+		Configuration.getInstance();
 	}
 	
-	/**
-	 * Gets the max size of this collection
-	 * @return
-	 */
-	public int getMaxSize(){
-		return maxSize;
-	}
-	
-	/**
-	 * Adds a new image item in to list
-	 * @param item
-	 * @return Returns true if item was added, false if not
-	 */
-	public boolean addImageItem(ImageItem item){
-		if(currentIndex < maxSize){
-			images[currentIndex] = item;
-			currentIndex++;
-			return true;
-		} else {
-			return false;
+	public void add(ImageItem item){
+		if(!images.contains(item)){
+			images.add(item);
 		}		
 	}
 	
-	/**
-	 * Returns the color that is sorted by this. 
-	 * @return Returns a ImageColor if it is currently sorted by a color, null if not.
-	 */
-	public ImageColors getSortedByColor(){
-		return sortedByColor;
-	}
-		
-	/**
-	 * Sorts the list. This method is a publicly accessed method that
-	 * starts the iterative sorting method merge().
-	 */
-	public void sort(ImageColors colorToSort){				
-		sortedByColor = colorToSort;
-		merge(images);
+	public void remove(ImageItem item){
+		images.remove(item);
 	}
 	
-	/**
-	 * Performs an interative merge sorting of this list.
-	 * Method is private to protect the need for the array to be accessed publicly.
-	 */
-	private void merge(ImageItem[] unsorted){
-		if(unsorted == null){
-			return;
-		}
-		
-		if(unsorted.length > 1){
-			int middle = unsorted.length/2;
-			//Split left
-			ImageItem[] leftArray = new ImageItem[middle];
-			for(int i = 0; i < middle; i++){
-				leftArray[i] = unsorted[i];
-			}
-			//Split right
-			ImageItem[] rightArray = new ImageItem[unsorted.length - middle];
-			for(int i = middle; i < unsorted.length; i++){
-				rightArray[i - middle] = unsorted[i];
-			}
-			
-			//Iterate until size-able
-			merge(leftArray);
-			merge(rightArray);
-			
-			int i = 0, j = 0, k = 0;
-			//Start sorting and merging
-            while(i < leftArray.length && j < rightArray.length)
-            {;
-            	if(leftArray[i].compareColorWith(rightArray[j], sortedByColor) == 1)
-                {
-                	unsorted[k] = leftArray[i];
-                    i++;
-                }
-                else
-                {
-                	unsorted[k] = rightArray[j];
-                    j++;
-                }
-                k++;
-            }
-            //Retrieve the rest
-            while(i < leftArray.length)
-            {
-            	unsorted[k] = leftArray[i];
-                i++;
-                k++;
-            }
-            while(j < rightArray.length)
-            {
-            	unsorted[k] = rightArray[j];
-                j++;
-                k++;
-            }
-		}
-		
+	public void sort(ImageColors color){
+		sortedByColor = color;
+		Collections.sort(images, comparator);
 	}
 	
-	/**
-	 * @return Returns a string of every to String of the ImageItems
-	 */
+	public void clear(){
+		images.clear();
+	}
+		
+	class ImageListComparator implements Comparator<ImageItem>{
+		@Override
+		public int compare(ImageItem item1, ImageItem item2) {
+			double val1, val2;
+			int totalPixel1 = item1.getWidth() * item1.getHeight(), totalPixel2 = item2.getWidth() * item2.getHeight();
+			
+			switch (sortedByColor) {
+			case GREY:
+				val1 = item1.getGreyCounter();
+				val2 = item2.getGreyCounter();
+				break;
+			case WHITE:
+				val1 = item1.getWhiteCounter();
+				val2 = item2.getWhiteCounter();
+				break;
+			case RED:
+				val1 = item1.getRedCounter();
+				val2 = item2.getRedCounter();
+				break;
+			case GREEN:
+				val1 = item1.getGreenCounter();
+				val2 = item2.getGreenCounter();
+				break;
+			case BLUE:
+				val1 = item1.getBlueCounter();
+				val2 = item2.getBlueCounter();
+				break;
+			case YELLOW:
+				val1 = item1.getYellowCounter();
+				val2 = item2.getYellowCounter();
+				break;
+			case MAGENTA:
+				val1 = item1.getMagentaCounter();
+				val2 = item2.getMagentaCounter();
+				break;
+			case CYAN:
+				val1 = item1.getCyanCounter();
+				val2 = item2.getCyanCounter();
+				break;
+			default:
+				val1 = item1.getBlackCounter();
+				val2 = item2.getBlackCounter();
+				break;
+			}	
+			val1 /= totalPixel1;
+			val2 /= totalPixel2;
+			
+			if(val1 < val2)
+				return 1;
+			else if(val1 == val2)
+				return 0;
+			else 
+				return -1;	
+		}		
+	}	
+
 	public String toString(){
-		StringBuilder build = new StringBuilder();
-		int i = 1; //counter
-		for(ImageItem item: images){
-			build.append("Image item no. " + i + ":\n");
-			build.append(item.toString() + "\n");
-			i++;
+		StringBuilder builder = new StringBuilder();
+		int counter = 0;
+		
+		for(ImageItem item : images){
+			builder.append("[" + counter + "]" + " " + item+ "\n");
+			counter++;
 		}
-		return build.toString();
+		
+		return builder.toString();
 	}
-	
 }
